@@ -1,4 +1,4 @@
-# Machine-Learning
+# Crystal-Graph-Features
 Learning physical properties from crystal structure
 
 The Order_Parameters jupyter notebook file calculates atomic-species-aware and directionally biased order parameters. The script requires the configuration files that are provided in the corresponding folders.
