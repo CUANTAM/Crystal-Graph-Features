@@ -11,6 +11,7 @@ The example configurations are all 16 atoms (two conventional cells). The exampl
 Output:
 
 Global attributes:
+
   Configuration effective lattice constants:
   'lat_a', 'lat_b', 'lat_c'
   Configuration element wise concentrations:
