@@ -1,9 +1,39 @@
 # Crystal-Graph-Features
-Learning physical properties from crystal structure
+Obtaining geometrical and physical features from crystal ctructure.
 
-The Order_Parameters jupyter notebook file calculates atomic-species-aware and directionally biased order parameters. The script requires the configuration files that are provided in the corresponding folders.
+The Crystal-Graph-Features jupyter notebook script calculates geometrical and physical attributes derived from the Voronoi tesselation of crystal structure. The atomic-species-aware and directionally biased order parameters are calculated up to the third order of the nearest Voronoi cells for each atom. The script requires the configuration files that are provided in the corresponding folders. The user can provide their own configuration files as well.
+
 The example configurations are all 16 atoms (two conventional cells). The examples are:
 1) SiGe (4 monolayers / 4 monolayers) superlattice on Si substrate
 2) SiGe (4 monolayers / 4 monolayers) superlattice on Ge substrate
 3) SiGe random alloy
 
+Output:
+
+Global attributes:
+  Configuration effective lattice constants:
+  'lat_a', 'lat_b', 'lat_c'
+  Configuration element wise concentrations:
+  'ElementA_conc','ElementB_conc', .....
+  Atomic positions:
+  'x', 'y', 'z'  
+
+Local attributes:
+
+  Unbiased:
+  
+  'maximum_packing_efficiency','min_cell_volume', 'max_cell_volume',
+  'mean_cell_volume', 'var_cell_volume', 'tot_cell_volume'
+  
+  (6 total)
+  
+  Biased (have X, Y, and Z components):
+  
+  'bond_length', 'var_bond_length','mean_face_area', 'max_face_area',
+  'min_face_area', 'var_face_area', 'tot_face_area','coordination',
+  'electronegativities', 'ionic_character',
+  '1_order', '2_order', '3_order'
+  
+  (52 total)
+
+Additionally each atom has labels of its 'index' in the configuration and atomic 'symbol'.
