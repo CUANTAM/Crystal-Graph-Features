@@ -10,25 +10,25 @@ The example configurations are all 16 atoms (two conventional cells). The exampl
 
 Output:
 
-Global attributes:
+(i) Global attributes:
 
-  Configuration effective lattice constants:
+  1) Configuration effective lattice constants:
   'lat_a', 'lat_b', 'lat_c'
-  Configuration element wise concentrations:
+  2) Configuration element wise concentrations:
   'ElementA_conc','ElementB_conc', .....
-  Atomic positions:
+  3) Atomic positions:
   'x', 'y', 'z'  
 
-Local attributes:
+(ii) Local attributes:
 
-  Unbiased:
+  1) Unbiased:
   
   'maximum_packing_efficiency','min_cell_volume', 'max_cell_volume',
   'mean_cell_volume', 'var_cell_volume', 'tot_cell_volume'
   
   (6 total)
   
-  Biased (have X, Y, and Z components):
+  2) Biased (have X, Y, and Z components):
   
   'bond_length', 'var_bond_length','mean_face_area', 'max_face_area',
   'min_face_area', 'var_face_area', 'tot_face_area','coordination',
