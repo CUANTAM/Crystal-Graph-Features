@@ -37,3 +37,12 @@ Local attributes:
   (52 total)
 
 Additionally each atom has labels of its 'index' in the configuration and atomic 'symbol'.
+
+
+/////////////////////////////////////////////////////////////////
+
+Order_Parameters.py
+
+Takes two arguments: number of processors and configuration file path. Works wich various DFT and MD output formats.
+
+
