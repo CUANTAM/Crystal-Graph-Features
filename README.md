@@ -47,9 +47,15 @@ Additionally each atom has labels of its 'index' in the configuration and atomic
 
 Order_Parameters.py
 
+Easy restrat capability from the saved calculated features.
+
 Takes three arguments: number of processors, configuration file path, and output directory. Works with various DFT and MD configuration file formats.
 Example:
 
 python Order_Parameters.py 100 ./CONTCAR ./
 
+
+Calculation time estimate:
+Example:
+Si bulk 40,000 atoms on 1,000 processors ~ 4 hours
 
