@@ -56,6 +56,5 @@ python Order_Parameters.py 100 ./CONTCAR ./
 
 
 Calculation time estimate:
-Example:
 Si bulk 40,000 atoms on 1,000 processors ~ 4 hours
 
