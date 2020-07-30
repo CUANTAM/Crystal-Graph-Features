@@ -21,14 +21,14 @@ Output:
 
 (ii) Local attributes:
 
-  1) Unbiased:
+  1) Unisotropic:
   
   'maximum_packing_efficiency','min_cell_volume', 'max_cell_volume',
   'mean_cell_volume', 'var_cell_volume', 'tot_cell_volume'
   
   (6 total)
   
-  2) Biased (have X, Y, and Z components):
+  2) Biased (have unisotropic and isotropic X, Y, and Z counterparts):
   
   'bond_length', 'var_bond_length','mean_face_area', 'max_face_area',
   'min_face_area', 'var_face_area', 'tot_face_area','coordination',
