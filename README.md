@@ -32,10 +32,13 @@ Output:
   
   'bond_length', 'var_bond_length','mean_face_area', 'max_face_area',
   'min_face_area', 'var_face_area', 'tot_face_area','coordination',
-  'electronegativities', 'ionic_character',
+  'min_electronegativities','max_electronegativities',
+  'mean_electronegativities','var_electronegativities',
+  'min_ionic_character', 'max_ionic_character', 
+  'mean_ionic_character', 'var_ionic_character',
   '1_order', '2_order', '3_order'
   
-  (52 total)
+  (76 total)
 
 Additionally each atom has labels of its 'index' in the configuration and atomic 'symbol'.
 
@@ -44,6 +47,9 @@ Additionally each atom has labels of its 'index' in the configuration and atomic
 
 Order_Parameters.py
 
-Takes two arguments: number of processors and configuration file path. Works wich various DFT and MD output formats.
+Takes three arguments: number of processors, configuration file path, and output directory. Works with various DFT and MD configuration file formats.
+Example:
+
+python Order_Parameters.py 100 ./CONTCAR ./
 
 
