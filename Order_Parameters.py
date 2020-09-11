@@ -788,9 +788,9 @@ if seed!=None:
     random.seed(int(seed))
 
 if sample!=None:
-    indices = random.sample(list(indices), int(len(indices)*int(sample)/100))
+    indices = random.sample(list(indices), int(len(indices)*float(sample)/100))
 
-
+indices_needed=indices
 
 #/////////////////////////////////////////////////////////////
 # Try to RESTART 
@@ -802,11 +802,14 @@ if sample!=None:
 
 #/////////////////////////////////////////////////////////////
 # Try to RESTART
-donefeats=os.listdir(featpath)
-
-donefeats=[int(feat.split('.')[0]) for feat in donefeats]
-
-indices = np.setdiff1d(indices,donefeats)
+if ordering=='False':
+    donefeats=os.listdir(featpath)
+    donefeats=[int(feat.split('.')[0]) for feat in donefeats]
+    indices = np.setdiff1d(indices,donefeats)
+else:
+    donefeats=os.listdir(weigpath)
+    donefeats=[int(feat.split('.')[0]) for feat in donefeats]
+    indices = np.setdiff1d(indices,donefeats)
 #////////////////////////////////////////////////////////////
 
 
@@ -969,7 +972,7 @@ pool.terminate()
 df_results=pd.DataFrame()
 #for k in np.arange(0,sizestructure,scale):
 #print(indices)
-for k in indices:
+for k in indices_needed:
     #print(k)
     df_tmp1=pd.read_csv(featpath+str(k)+'.csv')
     #print(df_tmp1)
