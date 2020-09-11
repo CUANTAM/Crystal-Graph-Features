@@ -21,7 +21,7 @@ from ase.atoms import Atoms
 from ase.parallel import paropen
 from ase.calculators.lammps import Prism, convert
 import os
-
+import random
 
 
 #Set the number of output decimals for the calculated features
@@ -490,12 +490,25 @@ try:
         except:
             pass
 
+
 except:
         print('Missing the output path.')
         exit()
 
+try:
+        ordering=sys.argv[4]
+except:
+        pass
 
+try:
+        sample=sys.argv[5]
+except:
+        pass
 
+try:
+        seed=sys.argv[6]
+except:
+        pass
 
 #Get the order parameters
 
@@ -673,28 +686,28 @@ def get_atomic_env(w,df):
             df_atom['min_cell_volume']=[np.round(df['volumes_r'].min(),decimals=n_decimals)]
             df_atom['max_cell_volume']=[np.round(df['volumes_r'].max(),decimals=n_decimals)]
             df_atom['mean_cell_volume']=[np.round(df['volumes_r'].mean(),decimals=n_decimals)]
-            df_atom['var_cell_volume']=[np.round(df['volumes_r'].var(),decimals=n_decimals)]
+            df_atom['mad_cell_volume']=[np.round(df['volumes_r'].mad(),decimals=n_decimals)]
             df_atom['tot_cell_volume']=[np.round(df['volumes_r'].sum(),decimals=n_decimals)]
 
             df_atom['mean_face_area']=[np.round(df['face_areas_r'].mean() ,decimals=n_decimals)]
             df_atom['max_face_area']=[np.round(df['face_areas_r'].max(),decimals=n_decimals)]
             df_atom['min_face_area']=[np.round(df['face_areas_r'].min(),decimals=n_decimals)]
-            df_atom['var_face_area']=[np.round(df['face_areas_r'].var(),decimals=n_decimals)]
+            df_atom['mad_face_area']=[np.round(df['face_areas_r'].mad(),decimals=n_decimals)]
             df_atom['tot_face_area']=[np.round(df['face_areas_r'].sum(),decimals=n_decimals)]
             df_atom['mean_face_area_a']=[np.round(df['face_areas_r_a'].mean() ,decimals=n_decimals)]
             df_atom['max_face_area_a']=[np.round(df['face_areas_r_a'].max(),decimals=n_decimals)]
             df_atom['min_face_area_a']=[np.round(df['face_areas_r_a'].min(),decimals=n_decimals)]
-            df_atom['var_face_area_a']=[np.round(df['face_areas_r_a'].var(),decimals=n_decimals)]
+            df_atom['mad_face_area_a']=[np.round(df['face_areas_r_a'].mad(),decimals=n_decimals)]
             df_atom['tot_face_area_a']=[np.round(df['face_areas_r_a'].sum(),decimals=n_decimals)]
             df_atom['mean_face_area_b']=[np.round(df['face_areas_r_b'].mean() ,decimals=n_decimals)]
             df_atom['max_face_area_b']=[np.round(df['face_areas_r_b'].max(),decimals=n_decimals)]
             df_atom['min_face_area_b']=[np.round(df['face_areas_r_b'].min(),decimals=n_decimals)]
-            df_atom['var_face_area_b']=[np.round(df['face_areas_r_b'].var(),decimals=n_decimals)]
+            df_atom['mad_face_area_b']=[np.round(df['face_areas_r_b'].mad(),decimals=n_decimals)]
             df_atom['tot_face_area_b']=[np.round(df['face_areas_r_b'].sum(),decimals=n_decimals)]
             df_atom['mean_face_area_c']=[np.round(df['face_areas_r_c'].mean() ,decimals=n_decimals)]
             df_atom['max_face_area_c']=[np.round(df['face_areas_r_c'].max(),decimals=n_decimals)]
             df_atom['min_face_area_c']=[np.round(df['face_areas_r_c'].min(),decimals=n_decimals)]
-            df_atom['var_face_area_c']=[np.round(df['face_areas_r_c'].var(),decimals=n_decimals)]
+            df_atom['mad_face_area_c']=[np.round(df['face_areas_r_c'].mad(),decimals=n_decimals)]
             df_atom['tot_face_area_c']=[np.round(df['face_areas_r_c'].sum(),decimals=n_decimals)]
             df_atom['coordination']=[np.round((df['face_areas_r'].sum())**2/((df['face_areas_r']**2).sum()),decimals=n_decimals)]
             df_atom['coordination_a']=[np.round((df['face_areas_r_a'].sum())**2/((df['face_areas_r_a']**2).sum()),decimals=n_decimals)]
@@ -708,13 +721,13 @@ def get_atomic_env(w,df):
                 df_atom['max_'+property_name]=[np.round(features[0],decimals=n_decimals)]
                 df_atom['min_'+property_name]=[np.round(features[1],decimals=n_decimals)]
                 df_atom['mean_'+property_name]=[np.round(features[2],decimals=n_decimals)]
-                df_atom['var_'+property_name]=[np.round(features[3],decimals=n_decimals)]
+                df_atom['mad_'+property_name]=[np.round(features[3],decimals=n_decimals)]
 
             features=calculate_ionic_character(electronegativities, df[['index','element_nn_list']],  df[['index','symbol']].iloc[0], df['face_areas_r'])
             df_atom['max_ionic_character']=[np.round(features[0],decimals=n_decimals)]
             df_atom['min_ionic_character']=[np.round(features[1],decimals=n_decimals)]
             df_atom['mean_ionic_character']=[np.round(features[2],decimals=n_decimals)]
-            df_atom['var_ionic_character']=[np.round(features[3],decimals=n_decimals)]
+            df_atom['mad_ionic_character']=[np.round(features[3],decimals=n_decimals)]
 
             for dictionary in local_properties:
                 property_name='electronegativities_a' #[ k for k,v in locals().items() if v is dictionary][1]    
@@ -722,14 +735,14 @@ def get_atomic_env(w,df):
                 df_atom['max_'+property_name]=[np.round(features[0],decimals=n_decimals)]
                 df_atom['min_'+property_name]=[np.round(features[1],decimals=n_decimals)]
                 df_atom['mean_'+property_name]=[np.round(features[2],decimals=n_decimals)]
-                df_atom['var_'+property_name]=[np.round(features[3],decimals=n_decimals)]
+                df_atom['mad_'+property_name]=[np.round(features[3],decimals=n_decimals)]
 
             features=calculate_ionic_character(electronegativities, df[['index','element_nn_list']],  df[['index','symbol']].iloc[0], df['face_areas_r_a'])
 
             df_atom['max_ionic_character_a']=[np.round(features[0],decimals=n_decimals)]
             df_atom['min_ionic_character_a']=[np.round(features[1],decimals=n_decimals)]
             df_atom['mean_ionic_character_a']=[np.round(features[2],decimals=n_decimals)]
-            df_atom['var_ionic_character_a']=[np.round(features[3],decimals=n_decimals)]
+            df_atom['mad_ionic_character_a']=[np.round(features[3],decimals=n_decimals)]
 
             for dictionary in local_properties:
                 property_name='electronegativities_b' #[ k for k,v in locals().items() if v is dictionary][1]    
@@ -737,26 +750,26 @@ def get_atomic_env(w,df):
                 df_atom['max_'+property_name]=[np.round(features[0],decimals=n_decimals)]
                 df_atom['min_'+property_name]=[np.round(features[1],decimals=n_decimals)]
                 df_atom['mean_'+property_name]=[np.round(features[2],decimals=n_decimals)]
-                df_atom['var_'+property_name]=[np.round(features[3],decimals=n_decimals)]
+                df_atom['mad_'+property_name]=[np.round(features[3],decimals=n_decimals)]
 
             features=calculate_ionic_character(electronegativities, df[['index','element_nn_list']],  df[['index','symbol']].iloc[0], df['face_areas_r_b'])
             df_atom['max_ionic_character_b']=[np.round(features[0],decimals=n_decimals)]
             df_atom['min_ionic_character_b']=[np.round(features[1],decimals=n_decimals)]
             df_atom['mean_ionic_character_b']=[np.round(features[2],decimals=n_decimals)]
-            df_atom['var_ionic_character_b']=[np.round(features[3],decimals=n_decimals)]
+            df_atom['mad_ionic_character_b']=[np.round(features[3],decimals=n_decimals)]
             for dictionary in local_properties:
                 property_name='electronegativities_c' #[ k for k,v in locals().items() if v is dictionary][1]    
                 features=calculate_local_properties(dictionary, df[['index','element_nn_list']], df[['index','symbol']].iloc[0], df['face_areas_r_c'])
                 df_atom['max_'+property_name]=[np.round(features[0],decimals=n_decimals)]
                 df_atom['min_'+property_name]=[np.round(features[1],decimals=n_decimals)]
                 df_atom['mean_'+property_name]=[np.round(features[2],decimals=n_decimals)]
-                df_atom['var_'+property_name]=[np.round(features[3],decimals=n_decimals)]
+                df_atom['mad_'+property_name]=[np.round(features[3],decimals=n_decimals)]
 
             features=calculate_ionic_character(electronegativities, df[['index','element_nn_list']],  df[['index','symbol']].iloc[0], df['face_areas_r_c'])
             df_atom['max_ionic_character_c']=[np.round(features[0],decimals=n_decimals)]
             df_atom['min_ionic_character_c']=[np.round(features[1],decimals=n_decimals)]
             df_atom['mean_ionic_character_c']=[np.round(features[2],decimals=n_decimals)]
-            df_atom['var_ionic_character_c']=[np.round(features[3],decimals=n_decimals)]
+            df_atom['mad_ionic_character_c']=[np.round(features[3],decimals=n_decimals)]
             df_atom['lat_a']=[np.round(lat_a,decimals=n_decimals)]
             df_atom['lat_b']=[np.round(lat_b,decimals=n_decimals)]
             df_atom['lat_c']=[np.round(lat_c,decimals=n_decimals)]
@@ -766,15 +779,34 @@ def get_atomic_env(w,df):
             return df_atom
 
 
+
 indices = np.arange(0,sizestructure,scale)
+
+#print(indices)
+
+if seed!=None:
+    random.seed(int(seed))
+
+if sample!=None:
+    indices = random.sample(list(indices), int(len(indices)*int(sample)/100))
+
+
 
 #/////////////////////////////////////////////////////////////
 # Try to RESTART 
-doneweights=os.listdir(weigpath)
+#doneweights=os.listdir(weigpath)
+#doneweights=[int(weight.split('.')[0]) for weight in doneweights]
+#indices = np.setdiff1d(indices,doneweights)
+#////////////////////////////////////////////////////////////
 
-doneweights=[int(weight.split('.')[0]) for weight in doneweights]
 
-indices = np.setdiff1d(indices,doneweights)
+#/////////////////////////////////////////////////////////////
+# Try to RESTART
+donefeats=os.listdir(featpath)
+
+donefeats=[int(feat.split('.')[0]) for feat in donefeats]
+
+indices = np.setdiff1d(indices,donefeats)
 #////////////////////////////////////////////////////////////
 
 
@@ -805,14 +837,18 @@ for dictionary in list_of_dict:
 def worker(enumerated_comps):
 
     for ind, i in enumerated_comps:
-            try:
-                df_all=pd.read_csv(mappath+str(i)+'.csv')
+         try:
                 df_atom=pd.read_csv(featpath+str(i)+'.csv')
-            except:
+         except:
                 df_all=get_neighbor_map(i)
                 df_atom=get_atomic_env(i,df_all)
-                df_all.to_csv(mappath+str(i)+'.csv',index=False)
                 df_atom.to_csv(featpath+str(i)+'.csv',index=False)
+         if ordering!='False':
+            try:
+                df_all=pd.read_csv(mappath+str(i)+'.csv')
+            except:
+                df_all=get_neighbor_map(i)
+                df_all.to_csv(mappath+str(i)+'.csv',index=False)
 
             element_0=df_all[(df_all['index']==i)]['symbol'].drop_duplicates().values
             
@@ -931,12 +967,39 @@ pool.terminate()
 ##/////////////////////////////////
 # Combine results
 df_results=pd.DataFrame()
-for k in np.arange(0,sizestructure,scale):
+#for k in np.arange(0,sizestructure,scale):
+#print(indices)
+for k in indices:
+    #print(k)
     df_tmp1=pd.read_csv(featpath+str(k)+'.csv')
-    df_tmp2=pd.read_csv(weigpath+str(k)+'.csv')
+    #print(df_tmp1)
+    if ordering=='True':
+        df_tmp2=pd.read_csv(weigpath+str(k)+'.csv')
+    else:
+        df_tmp2=pd.DataFrame()
     df_tmp=pd.concat([df_tmp1,df_tmp2],axis=1,sort=False)
     df_results=pd.concat([df_results,df_tmp]).round(n_decimals)
 
+#print(df_results)
+
+##CONCENTRATIONS
+
+list_species=sorted(structure.species)
+
+my_dict = {i:list_species.count(i) for i in list_species}
+
+
+for i in range(len(list(my_dict.keys()))):
+    df_results[str(list(my_dict.keys())[i])+"_conc"]=[(np.array(list(my_dict.values()))/sum(np.array(list(my_dict.values()))))[i]]*len(df_results)
+
+#////////////////
+
+
+
+#SAVE
+
 df_results.to_csv(outpath+'/features.csv',index=False)
+
+
 
 #///////////////////////////////////////
