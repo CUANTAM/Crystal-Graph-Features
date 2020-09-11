@@ -788,7 +788,7 @@ if seed!=None:
     random.seed(int(seed))
 
 if sample!=None:
-    indices = random.sample(list(indices), int(len(indices)*float(sample)/100))
+    indices = random.sample(list(indices), int(len(indices)*int(sample)/100))
 
 
 
