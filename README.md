@@ -21,21 +21,21 @@ Output:
 
 (ii) Local attributes:
 
-  1) Unisotropic:
+  1) Anisotropic:
   
   'maximum_packing_efficiency','min_cell_volume', 'max_cell_volume',
-  'mean_cell_volume', 'var_cell_volume', 'tot_cell_volume'
+  'mean_cell_volume', 'mad_cell_volume', 'tot_cell_volume'
   
   (6 total)
   
   2) Biased (have unisotropic and isotropic X, Y, and Z counterparts):
   
   'bond_length', 'var_bond_length','mean_face_area', 'max_face_area',
-  'min_face_area', 'var_face_area', 'tot_face_area','coordination',
+  'min_face_area', 'mad_face_area', 'tot_face_area','coordination',
   'min_electronegativities','max_electronegativities',
-  'mean_electronegativities','var_electronegativities',
+  'mean_electronegativities','mad_electronegativities',
   'min_ionic_character', 'max_ionic_character', 
-  'mean_ionic_character', 'var_ionic_character',
+  'mean_ionic_character', 'mad_ionic_character',
   '1_order', '2_order', '3_order'
   
   (76 total)
@@ -50,9 +50,15 @@ Order_Parameters.py
 Easy restrat capability from the saved calculated features.
 
 Takes three arguments: number of processors, configuration file path, and output directory. Works with various DFT and MD configuration file formats.
+
+Additional options:
+-calculate the order parameters: True/False (saves time)
+-calculate features for a random sample from the configuration: Percentage Seed
+
 Example:
 
-python Order_Parameters.py 100 ./CONTCAR ./
+python Order_Parameters.py 32 SiGe_random/CONTCAR SiGe_random/ True 50 0
+
 
 
 Calculation time estimate:
