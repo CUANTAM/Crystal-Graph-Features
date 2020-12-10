@@ -26,7 +26,7 @@ import random
 
 #Set the number of output decimals for the calculated features
 
-n_decimals = 3
+n_decimals = 6
 
 # Provide the lattice constants of bulk system for the reference to be used for the global features
 # This are for the bulk Silicon:
@@ -503,11 +503,13 @@ except:
 try:
         sample=sys.argv[5]
 except:
+        sample=None
         pass
 
 try:
         seed=sys.argv[6]
 except:
+        seed=None
         pass
 
 #Get the order parameters
@@ -553,7 +555,7 @@ if sizestructure<1000:
     result=True
     for w in range(sizestructure):
             while result:
-                cell_dict=local_env.VoronoiNN().get_nn_info(structure,w)
+                cell_dict=local_env.VoronoiNN(allow_pathological=True).get_nn_info(structure,w)
                 neighbors=[cell_dict[v]['site_index'] for v in range(len(cell_dict))]
                 result=checkIfDuplicates(neighbors)
                 if result:
@@ -561,12 +563,17 @@ if sizestructure<1000:
                         zer[list(structure.lattice.abc).index(min(list(structure.lattice.abc)))]=1
                         M+=np.array(zer)
                         structure.make_supercell(M)
-                        cell_dict=local_env.VoronoiNN().get_nn_info(structure,w)
+                        cell_dict=local_env.VoronoiNN(allow_pathological=True).get_nn_info(structure,w)
                         neighbors=[cell_dict[v]['site_index'] for v in range(len(cell_dict))]
                         result=checkIfDuplicates(neighbors)
     structure_save.make_supercell(M)
     structure = structure_save
 ##\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\                
+
+#M=np.array([4,4,1])
+#structure_save.make_supercell(M)
+#structure = structure_save
+
 
 scale=np.product(M)
 sizestructure=len(structure.atomic_numbers)
@@ -639,7 +646,7 @@ def calculate_ionic_character(dictionary, neighbors, core_atom, face_areas_r):
 
 def get_neighbor_map(w):
             df=pd.DataFrame()
-            cell_dict=local_env.VoronoiNN().get_nn_info(structure,w)
+            cell_dict=local_env.VoronoiNN(allow_pathological=True).get_nn_info(structure,w)
             df['index']=[w]*len(cell_dict)
             df['symbol']=[str(structure._sites[w]).split()[-1]]*len(cell_dict)
             df['neighbors']=([cell_dict[v]['site_index'] for v in range(len(cell_dict))])
@@ -660,9 +667,9 @@ def get_neighbor_map(w):
             df['cosphi2']=df['dist_x']**2/(df['dist_x']**2+df['dist_y']**2+1E-99)
             df['sintheta2']=(df['dist_x']**2+df['dist_y']**2)/(df['dist_x']**2+df['dist_y']**2+df['dist_z']**2+1E-99)
             df['costheta2']=df['dist_z']**2/(df['dist_x']**2+df['dist_y']**2+df['dist_z']**2+1E-99)
-            df['face_areas_r_a']=df['face_areas_r']*df['cosphi2']*df['sintheta2']
-            df['face_areas_r_b']=df['face_areas_r']*df['sinphi2']*df['sintheta2']
-            df['face_areas_r_c']=df['face_areas_r']*df['costheta2']
+            df['face_areas_r_a']=df['face_areas_r']*df['cosphi2']**0.5*df['sintheta2']**0.5
+            df['face_areas_r_b']=df['face_areas_r']*df['sinphi2']**0.5*df['sintheta2']**0.5
+            df['face_areas_r_c']=df['face_areas_r']*df['costheta2']**0.5
             return df
 
 
@@ -984,6 +991,9 @@ for k in indices_needed:
     df_results=pd.concat([df_results,df_tmp]).round(n_decimals)
 
 #print(df_results)
+#df_results['index']=(indices_needed-np.mod(indices_needed+scale,scale))
+#print(indices_needed)
+#print((indices_needed-np.mod(indices_needed+scale,scale)))
 
 ##CONCENTRATIONS
 
