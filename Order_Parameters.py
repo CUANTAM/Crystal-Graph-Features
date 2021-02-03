@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 # Import prerequisite packages
 # the missing packages can be installed using the command 
 #pip install <package name>
@@ -13,7 +15,7 @@ import sys
 import pymatgen.io.ase
 import math
 import itertools
-import multiprocessing as mp
+#import multiprocessing as mp
 from operator import itemgetter
 import re
 import ase.io
@@ -22,6 +24,12 @@ from ase.parallel import paropen
 from ase.calculators.lammps import Prism, convert
 import os
 import random
+from mpi4py import MPI
+
+#-------------
+# Communicator
+#-------------
+comm = MPI.COMM_WORLD
 
 
 #Set the number of output decimals for the calculated features
@@ -962,16 +970,80 @@ else:
 comps = tuple(enumerate(all_tuples))
 
 chunksize = int(math.ceil(len(comps)/N_processors))
+
 jobs = tuple(slice_iterable(comps, chunksize))
 
-pool = mp.Pool(processes=N_processors)
-work_res = pool.map_async(worker, jobs)
+#pool = mp.Pool(processes=N_processors)
+#work_res = pool.map_async(worker, jobs)
+#map(itemgetter(1), sorted(itertools.chain(*work_res.get())))
+#pool.terminate()
+
+##////////////////////////////
+rank = comm.Get_rank()
+size = comm.Get_size()
 
 
-map(itemgetter(1), sorted(itertools.chain(*work_res.get())))
+for i,task in enumerate(tuple(slice_iterable(comps,chunksize))):
+  #This is how we split up the jobs.
+  #The % sign is a modulus, and the "continue" means
+  #"skip the rest of this bit and go to the next time
+  #through the loop"
+  # If we had e.g. 4 processors, this would mean
+  # that proc zero did tasks 0, 4, 8, 12, 16, ...
+  # and proc one did tasks 1, 5, 9, 13, 17, ...
+  # and do on.
+  if i%size!=rank: continue
+  print(task)
+  print("Task number %d  being done by processor %d of %d" % (i, rank, size))
+  worker(task)
+
+#my_N = 10
+#N = my_N * comm.size
+
+#if comm.rank == 0:
+    #A = np.arange(len(indices), dtype=np.float64)
+#    A = all_tuples
+#    print('A',A)
+#else:
+    #Note that if I am not the root processor A is an empty array
+#    A = np.empty(len(jobs), dtype=np.float64)
+
+#my_A = np.empty(chunksize, dtype=np.float64)
+#print('my_A',my_A)
+#-------------------------
+# Scatter data into my_A arrays
+#-------------------------
+#comm.Scatter( [A, MPI.DOUBLE], [my_A, MPI.DOUBLE] )
+
+#if comm.rank == 0:
+#   print("After Scatter:")
+ 
+#for r in range(comm.size):
+#    if comm.rank == r:
+#        print("[%d] %s" % (comm.rank, my_A))
+#    comm.Barrier()
+
+#-------------------------
+# Everybody is multiplying by 2
+#-------------------------
+#my_A **= 2
+#comps = tuple(enumerate(my_A))
+#print('my_A',my_A)
+
+#if comm.rank==0:
+#    for element in tuple(slice_iterable(comps,len(my_A))):
+#        worker(element)
+
+#-----------------------
+# Allgather data into A again
+#-----------------------
+#comm.Allgather( [my_A, MPI.DOUBLE], [A, MPI.DOUBLE] )
 
 
-pool.terminate()
+
+
+
+
 
 
 ##/////////////////////////////////
